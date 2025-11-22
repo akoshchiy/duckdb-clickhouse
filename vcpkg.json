@@ -1,6 +1,6 @@
 {
         "dependencies": [
-                "openssl"
+            "clickhouse-cpp"
         ],
         "vcpkg-configuration": {
                 "overlay-ports": [
