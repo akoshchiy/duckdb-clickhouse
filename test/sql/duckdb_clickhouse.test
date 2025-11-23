@@ -1,0 +1,23 @@
+# name: test/sql/duckdb_clickhouse.test
+# description: test duckdb_clickhouse extension
+# group: [sql]
+
+# Before we load the extension, this will fail
+statement error
+SELECT duckdb_clickhouse('Sam');
+----
+Catalog Error: Scalar Function with name duckdb_clickhouse does not exist!
+
+# Require statement will ensure this test is run with this extension loaded
+require duckdb_clickhouse
+
+# Confirm the extension works
+query I
+SELECT duckdb_clickhouse('Sam');
+----
+DuckdbClickhouse Sam 🐥
+
+query I
+SELECT duckdb_clickhouse_openssl_version('Michael') ILIKE 'DuckdbClickhouse Michael, my linked OpenSSL version is OpenSSL%';
+----
+true
