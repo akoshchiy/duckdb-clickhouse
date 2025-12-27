@@ -2,6 +2,10 @@
 
 namespace duckdb {
 
+ClickhouseSchemaEntry::ClickhouseSchemaEntry(Catalog &catalog, CreateSchemaInfo &info) 
+    : SchemaCatalogEntry(catalog, info), tables(*this, catalog) {
+}
+
 optional_ptr<CatalogEntry> ClickhouseSchemaEntry::CreateTable(CatalogTransaction transaction, BoundCreateTableInfo &info) {
     throw NotImplementedException("CreateTable");
 }
@@ -68,18 +72,29 @@ bool CatalogTypeIsSupported(CatalogType type) {
             return false;
     }
 }
+
+ClickhouseCatalogSet &ClickhouseSchemaEntry::GetCatalogSet(CatalogType type) {
+	switch (type) {
+	case CatalogType::TABLE_ENTRY:
+	// case CatalogType::VIEW_ENTRY:
+		return tables;
+	// case CatalogType::INDEX_ENTRY:
+		// return indexes;
+	default:
+		throw InternalException("Type not supported for GetCatalogSet");
+	}
+}
     
 optional_ptr<CatalogEntry> ClickhouseSchemaEntry::LookupEntry(CatalogTransaction transaction, const EntryLookupInfo &lookup_info) {
     auto lookup_type = lookup_info.GetCatalogType();
-    if (CatalogTypeIsSupported(lookup_type)) {
+    
+    if (!CatalogTypeIsSupported(lookup_type)) {
         return nullptr;
     }
 
+    auto &ch_transaction = ClickhouseTransaction::Get(transaction.GetContext(), catalog);
 
-
-
-
-    throw NotImplementedException("LookupEntry");
+    return GetCatalogSet(lookup_type).GetEntry(ch_transaction, lookup_info.GetEntryName());
 }
 
 } // namespace duckdb

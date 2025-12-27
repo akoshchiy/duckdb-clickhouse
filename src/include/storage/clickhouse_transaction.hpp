@@ -1,8 +1,10 @@
 #pragma once
 
+#include <mutex>
+
 #include "duckdb/transaction/transaction.hpp"
 
-#include <clickhouse/client.h>
+#include "clickhouse_client.hpp"
 
 namespace duckdb {
 
@@ -11,12 +13,12 @@ public:
     ClickhouseTransaction(Catalog &catalog, TransactionManager &manager, ClientContext &context);
     ~ClickhouseTransaction() override;
 
-    clickhouse::Client &GetClient();
+    ClickhouseClient &GetClient();
 
     static ClickhouseTransaction &Get(ClientContext &context, Catalog &catalog);
 
 private:
-    clickhouse::Client client;
+    ClickhouseClient client;
 };
 
 } // namespace duckdb 

@@ -6,13 +6,18 @@ namespace duckdb {
 
 class ClickhouseCatalogSet {
 public:
+    ClickhouseCatalogSet(Catalog &catalog);
+
     void Scan(ClickhouseTransaction &transaction, const std::function<void(CatalogEntry &)> &callback);
     optional_ptr<CatalogEntry> GetEntry(ClickhouseTransaction &transaction, const string &name);
+    optional_ptr<CatalogEntry> CreateEntry(unique_ptr<CatalogEntry> entry);
 
 protected:
     virtual void LoadEntries(ClickhouseTransaction &transaction) = 0;
-
     void TryLoadEntries(ClickhouseTransaction &transaction);
+
+protected:
+    Catalog &catalog;
 
 private:
     mutex entry_lock;

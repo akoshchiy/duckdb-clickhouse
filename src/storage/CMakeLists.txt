@@ -4,6 +4,8 @@ add_library(
     clickhouse_catalog.cpp
     clickhouse_schema_entry.cpp
     clickhouse_schema_set.cpp
+    clickhouse_table_set.cpp
+    clickhouse_table_entry.cpp
     clickhouse_storage_extension.cpp
     clickhouse_transaction_manager.cpp
     clickhouse_transaction.cpp)

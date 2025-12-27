@@ -6,6 +6,9 @@
 namespace duckdb {
 
 class ClickhouseSchemaSet : public ClickhouseCatalogSet {
+public:
+    ClickhouseSchemaSet(Catalog &catalog);
+
 protected:
     virtual void LoadEntries(ClickhouseTransaction &transaction);
 };

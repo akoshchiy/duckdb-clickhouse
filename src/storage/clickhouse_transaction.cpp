@@ -1,5 +1,6 @@
-#include "storage/clickhouse_transaction.hpp"
+#include <thread>
 
+#include "storage/clickhouse_transaction.hpp"
 #include "storage/clickhouse_catalog.hpp"
 
 namespace duckdb {
@@ -8,11 +9,11 @@ ClickhouseTransaction::ClickhouseTransaction(
     Catalog &catalog, 
     TransactionManager &manager, 
     ClientContext &context
-) : Transaction(manager, context), client(catalog.Cast<ClickhouseCatalog>().client_options) { }
+) : Transaction(manager, context), client(catalog.Cast<ClickhouseCatalog>().client_options, /* TODO config? */ 10) { }
 
 ClickhouseTransaction::~ClickhouseTransaction() = default;
 
-clickhouse::Client &ClickhouseTransaction::GetClient() {
+ClickhouseClient &ClickhouseTransaction::GetClient() {
     return client;
 }
 

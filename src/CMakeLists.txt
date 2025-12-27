@@ -4,7 +4,10 @@ add_subdirectory(storage)
 
 add_library(
     clickhouse_ext OBJECT
-    duckdb_clickhouse_extension.cpp)
+    clickhouse_utils.cpp
+    clickhouse_types.cpp
+    clickhouse_client.cpp
+    clickhouse_scanner_extension.cpp)
 
 set(ALL_OBJECT_FILES
     ${ALL_OBJECT_FILES} $<TARGET_OBJECTS:clickhouse_ext>

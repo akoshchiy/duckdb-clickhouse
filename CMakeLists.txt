@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
 
 set(CMAKE_CXX_STANDARD 17)
-set(TARGET_NAME duckdb_clickhouse)
+set(TARGET_NAME clickhouse_scanner)
 set(EXTENSION_NAME ${TARGET_NAME}_extension)
 set(LOADABLE_EXTENSION_NAME ${TARGET_NAME}_loadable_extension)
 
@@ -16,6 +16,8 @@ find_library(ZSTD_LIB zstd)
 find_library(LZ4_LIB lz4)
 
 include_directories(${CLICKHOUSE_CPP_INCLUDE_DIR})
+
+include_directories(third_party)
 
 add_subdirectory(src)
 
