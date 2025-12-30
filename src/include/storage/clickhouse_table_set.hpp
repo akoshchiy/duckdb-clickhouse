@@ -9,13 +9,13 @@ namespace duckdb {
 
 class ClickhouseTableSet : public ClickhouseCatalogSet {
 public:
-    ClickhouseTableSet(SchemaCatalogEntry &schema, Catalog &catalog);
+	ClickhouseTableSet(SchemaCatalogEntry &schema, Catalog &catalog);
 
 protected:
-    void LoadEntries(ClickhouseTransaction &transaction) override;
+	void LoadEntries(ClickhouseTransaction &transaction) override;
 
 private:
-    SchemaCatalogEntry &schema;
+	SchemaCatalogEntry &schema;
 };
-    
+
 } // namespace duckdb

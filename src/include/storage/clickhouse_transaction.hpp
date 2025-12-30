@@ -10,15 +10,15 @@ namespace duckdb {
 
 class ClickhouseTransaction : public Transaction {
 public:
-    ClickhouseTransaction(Catalog &catalog, TransactionManager &manager, ClientContext &context);
-    ~ClickhouseTransaction() override;
+	ClickhouseTransaction(Catalog &catalog, TransactionManager &manager, ClientContext &context);
+	~ClickhouseTransaction() override;
 
-    ClickhouseClient &GetClient();
+	ClickhouseClient &GetClient();
 
-    static ClickhouseTransaction &Get(ClientContext &context, Catalog &catalog);
+	static ClickhouseTransaction &Get(ClientContext &context, Catalog &catalog);
 
 private:
-    ClickhouseClient client;
+	ClickhouseClient client;
 };
 
-} // namespace duckdb 
+} // namespace duckdb

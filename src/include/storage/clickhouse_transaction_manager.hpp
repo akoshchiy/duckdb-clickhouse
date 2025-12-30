@@ -8,7 +8,7 @@ namespace duckdb {
 
 class ClickhouseTransactionManager : public TransactionManager {
 public:
-    ClickhouseTransactionManager(AttachedDatabase &db, Catalog &catalog);
+	ClickhouseTransactionManager(AttachedDatabase &db, Catalog &catalog);
 
 	Transaction &StartTransaction(ClientContext &context) override;
 

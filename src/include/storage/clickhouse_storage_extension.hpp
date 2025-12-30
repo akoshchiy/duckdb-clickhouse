@@ -6,7 +6,7 @@ namespace duckdb {
 
 class ClickhouseStorageExtension : public StorageExtension {
 public:
-    ClickhouseStorageExtension();
+	ClickhouseStorageExtension();
 };
 
 } // namespace duckdb

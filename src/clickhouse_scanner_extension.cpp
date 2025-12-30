@@ -26,7 +26,8 @@ namespace duckdb {
 //         } else if (lower_name == "port") {
 //             result->secret_map["port"] = named_param.second.ToString();
 //         } else {
-//             throw InternalException("Unknown named parameter passed to CreateClickhouseSecretFunction: " + lower_name);
+//             throw InternalException("Unknown named parameter passed to CreateClickhouseSecretFunction: " +
+//             lower_name);
 //         }
 //     }
 
@@ -44,35 +45,35 @@ namespace duckdb {
 // }
 
 static void LoadInternal(ExtensionLoader &loader) {
-    // SecretType secret_type;
-    // secret_type.name = "clickhouse";
-    // secret_type.deserializer = KeyValueSecret::Deserialize<KeyValueSecret>;
-    // secret_type.default_provider = "config";
-    
-    // loader.RegisterSecretType(secret_type);
+	// SecretType secret_type;
+	// secret_type.name = "clickhouse";
+	// secret_type.deserializer = KeyValueSecret::Deserialize<KeyValueSecret>;
+	// secret_type.default_provider = "config";
 
-    // CreateSecretFunction ch_secret_function = {"clickhouse", "config", CreateClickhouseSecretFunction};
-    // SetClickhouseSecretParameters(ch_secret_function);
-    // loader.RegisterFunction(ch_secret_function);
+	// loader.RegisterSecretType(secret_type);
 
-    auto &db = loader.GetDatabaseInstance();
-    auto &config = DBConfig::GetConfig(db);
+	// CreateSecretFunction ch_secret_function = {"clickhouse", "config", CreateClickhouseSecretFunction};
+	// SetClickhouseSecretParameters(ch_secret_function);
+	// loader.RegisterFunction(ch_secret_function);
 
-    config.storage_extensions["clickhouse_scanner"] = make_uniq<ClickhouseStorageExtension>();
+	auto &db = loader.GetDatabaseInstance();
+	auto &config = DBConfig::GetConfig(db);
+
+	config.storage_extensions["clickhouse_scanner"] = make_uniq<ClickhouseStorageExtension>();
 }
 
 void ClickhouseScannerExtension::Load(ExtensionLoader &loader) {
-    LoadInternal(loader);
+	LoadInternal(loader);
 }
 std::string ClickhouseScannerExtension::Name() {
-    return "clickhouse_scanner";
+	return "clickhouse_scanner";
 }
 
 std::string ClickhouseScannerExtension::Version() const {
 #ifdef EXT_VERSION_CLICKHOUSE_SCANNER
-    return EXT_VERSION_CLICKHOUSE_SCANNER;
+	return EXT_VERSION_CLICKHOUSE_SCANNER;
 #else
-    return "";
+	return "";
 #endif
 }
 
@@ -81,6 +82,6 @@ std::string ClickhouseScannerExtension::Version() const {
 extern "C" {
 
 DUCKDB_CPP_EXTENSION_ENTRY(clickhouse_scanner, loader) {
-    duckdb::LoadInternal(loader);
+	duckdb::LoadInternal(loader);
 }
 }
