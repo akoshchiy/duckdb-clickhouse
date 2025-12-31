@@ -16,7 +16,6 @@ find_library(ZSTD_LIB zstd)
 find_library(LZ4_LIB lz4)
 
 include_directories(${CLICKHOUSE_CPP_INCLUDE_DIR})
-
 include_directories(third_party)
 
 add_subdirectory(src)

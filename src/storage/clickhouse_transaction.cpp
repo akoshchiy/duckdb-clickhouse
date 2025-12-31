@@ -5,16 +5,14 @@
 
 namespace duckdb {
 
-ClickhouseTransaction::ClickhouseTransaction(
-    Catalog &catalog, 
-    TransactionManager &manager, 
-    ClientContext &context
-) : Transaction(manager, context), client(catalog.Cast<ClickhouseCatalog>().client_options, /* TODO config? */ 10) { }
+ClickhouseTransaction::ClickhouseTransaction(Catalog &catalog, TransactionManager &manager, ClientContext &context)
+    : Transaction(manager, context), client(catalog.Cast<ClickhouseCatalog>().client_options, /* TODO config? */ 10) {
+}
 
 ClickhouseTransaction::~ClickhouseTransaction() = default;
 
 ClickhouseClient &ClickhouseTransaction::GetClient() {
-    return client;
+	return client;
 }
 
 ClickhouseTransaction &ClickhouseTransaction::Get(ClientContext &context, Catalog &catalog) {

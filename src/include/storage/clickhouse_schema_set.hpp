@@ -7,10 +7,10 @@ namespace duckdb {
 
 class ClickhouseSchemaSet : public ClickhouseCatalogSet {
 public:
-    ClickhouseSchemaSet(Catalog &catalog);
+	explicit ClickhouseSchemaSet(Catalog &catalog);
 
 protected:
-    virtual void LoadEntries(ClickhouseTransaction &transaction);
+	void LoadEntries(ClickhouseTransaction &transaction) override;
 };
-    
+
 } // namespace duckdb

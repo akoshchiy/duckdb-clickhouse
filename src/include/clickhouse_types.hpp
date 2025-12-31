@@ -6,18 +6,19 @@
 namespace duckdb {
 
 struct ClickhouseTypeData {
-    string type;
+	string type;
 	int64_t precision;
 	int64_t scale;
 
-	ClickhouseTypeData(string type, ino64_t precision, int64_t scale) : type(std::move(type), precision, scale) {
+	ClickhouseTypeData(string type, int64_t precision, int64_t scale)
+	    : type(std::move(type)), precision(precision), scale(scale) {
 	}
 };
 
 class ClickhouseTypes {
 public:
-    static LogicalType TypeToLogicalType(const ClickhouseTypeData &input);
+	static LogicalType TypeToLogicalType(const ClickhouseTypeData &input);
 	static bool IsNullable(const ClickhouseTypeData &input);
 };
-    
-} // namespace duckdb 
+
+} // namespace duckdb
