@@ -28,8 +28,14 @@ void ClickhouseSchemaSet::LoadEntries(ClickhouseTransaction &transaction) {
 			std::string_view view_name = block[0]->As<clickhouse::ColumnString>()->At(i);
 			std::string name = std::string(view_name);
 
+			if (IsSchemaInternal(name)) {
+				// TODO implement
+				continue;
+			}
+
 			CreateSchemaInfo info;
-			info.internal = IsSchemaInternal(name);
+			// info.internal = IsSchemaInternal(name);
+			info.internal = false;
 			info.schema = std::move(name);
 
 			auto schema = make_uniq<ClickhouseSchemaEntry>(catalog, info);
