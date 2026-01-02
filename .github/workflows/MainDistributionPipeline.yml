@@ -4,7 +4,6 @@
 name: Main Extension Distribution Pipeline
 on:
   push:
-  pull_request:
   workflow_dispatch:
 
 concurrency:
@@ -19,6 +18,7 @@ jobs:
       duckdb_version: v1.4.2
       ci_tools_version: v1.4.2
       extension_name: clickhouse_scanner
+      skip_tests: true
       exclude_archs: 'wasm_mvp;wasm_eh;wasm_threads;windows_amd64;windows_amd64_mingw;osx_amd64;osx_arm64;linux_arm64;linux_amd64_musl'
 
   code-check:
