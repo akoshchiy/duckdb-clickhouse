@@ -1,4 +1,4 @@
-name: CodeQuality
+name: CodeChecks
 on:
   workflow_call:
     inputs:
@@ -27,10 +27,10 @@ on:
       extra_toolchains:
         type: string
         required: false
-      format_checks:
-        type: string
-        required: false
-        default: "format;tidy"
+      # format_checks:
+      #   type: string
+      #   required: false
+      #   default: "format;tidy"
       # Override the default vcpkg repository
       vcpkg_url:
         required: false
@@ -58,7 +58,6 @@ env:
 jobs:
   format-check:
     name: Format Check
-    if: contains(inputs.format_checks, 'format')
     runs-on: ubuntu-22.04
 
     env:
@@ -108,7 +107,6 @@ jobs:
 
   tidy-check:
     name: Tidy Check
-    if: contains(inputs.format_checks, 'tidy')
     runs-on: ubuntu-24.04
 
     env:
@@ -156,3 +154,83 @@ jobs:
       - name: Tidy Check Diff
         shell: bash
         run: make tidy-check-fixed
+
+  sqllogic-test:
+    name: SqlLogic Test
+    runs-on: ubuntu-24.04
+
+    env:
+      CC: gcc
+      CXX: g++
+      GEN: ninja
+      VCPKG_TOOLCHAIN_PATH: ${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
+
+    steps:
+      - uses: actions/checkout@v4
+        name: Checkout override repository
+        if: ${{inputs.override_repository != ''}}
+        with:
+          repository: ${{ inputs.override_repository }}
+          ref: ${{ inputs.override_ref }}
+          fetch-depth: 0
+          submodules: 'recursive'
+
+      - uses: actions/checkout@v4
+        name: Checkout current repository
+        if: ${{inputs.override_repository == ''}}
+        with:
+          fetch-depth: 0
+          submodules: 'recursive'
+
+      - uses: actions/checkout@v4
+        name: Checkout Extension CI tools
+        with:
+          path: 'extension-ci-tools'
+          ref: ${{ inputs.ci_tools_version }}
+          repository: ${{ inputs.override_ci_tools_repository }}
+
+      - name: Install dependencies
+        shell: bash
+        run: sudo apt-get update -y -qq && sudo apt-get install -y -qq ninja-build clang-tidy && sudo pip3 install pybind11[global] --break-system-packages
+
+      - name: Setup vcpkg
+        uses: lukka/run-vcpkg@v11.1
+        with:
+          vcpkgGitCommitId: ${{ inputs.vcpkg_commit }}
+          vcpkgGitURL: ${{ inputs.vcpkg_url }}
+
+      - name: Build
+        shell: bash
+        run: make release
+
+      - name: Install clickhouse
+        shell: bash
+        run: |
+          # Install prerequisite packages
+          sudo apt-get install -y apt-transport-https ca-certificates curl gnupg
+
+          # Download the ClickHouse GPG key and store it in the keyring
+          curl -fsSL 'https://packages.clickhouse.com/rpm/lts/repodata/repomd.xml.key' | sudo gpg --dearmor -o /usr/share/keyrings/clickhouse-keyring.gpg
+
+          # Get the system architecture
+          ARCH=$(dpkg --print-architecture)
+
+          # Add the ClickHouse repository to apt sources
+          echo "deb [signed-by=/usr/share/keyrings/clickhouse-keyring.gpg arch=${ARCH}] https://packages.clickhouse.com/deb stable main" | sudo tee /etc/apt/sources.list.d/clickhouse.list
+
+          # Update apt package lists
+          sudo apt-get update
+
+          sudo apt-get install -y clickhouse-server clickhouse-client
+
+      - name: Run clickhouse
+        shell: bash
+        run: sudo service clickhouse-server start
+
+      - name: Init clickhouse data
+        shell: bash
+        run: clickhouse-client --queries-file scripts/setup_clickhouse.sql
+
+      - name: Run tests
+        shell: bash
+        run: make test

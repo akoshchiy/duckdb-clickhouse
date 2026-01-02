@@ -46,6 +46,7 @@ public:
 
 private:
 	ClickhouseCatalogSet &GetCatalogSet(CatalogType type);
+	bool CatalogTypeIsSupported(CatalogType type);
 
 private:
 	ClickhouseTableSet tables;

@@ -60,18 +60,22 @@ void ClickhouseSchemaEntry::Alter(CatalogTransaction transaction, AlterInfo &inf
 
 void ClickhouseSchemaEntry::Scan(ClientContext &context, CatalogType type,
                                  const std::function<void(CatalogEntry &)> &callback) {
-	throw NotImplementedException("Scan");
+	if (!CatalogTypeIsSupported(type)) {
+		return;
+	}
+	auto &tx = ClickhouseTransaction::Get(context, catalog);
+	GetCatalogSet(type).Scan(tx, callback);
 }
 
 void ClickhouseSchemaEntry::Scan(CatalogType type, const std::function<void(CatalogEntry &)> &callback) {
-	throw NotImplementedException("Scan");
+	throw NotImplementedException("Scan without context not supported");
 }
 
 void ClickhouseSchemaEntry::DropEntry(ClientContext &context, DropInfo &info) {
 	throw NotImplementedException("DropEntry");
 }
 
-bool CatalogTypeIsSupported(CatalogType type) {
+bool ClickhouseSchemaEntry::CatalogTypeIsSupported(CatalogType type) {
 	switch (type) {
 	// case CatalogType::INDEX_ENTRY:
 	case CatalogType::TABLE_ENTRY:

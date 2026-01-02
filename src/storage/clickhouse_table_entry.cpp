@@ -1,4 +1,5 @@
 #include "storage/clickhouse_table_entry.hpp"
+#include "clickhouse_scan.hpp"
 
 namespace duckdb {
 
@@ -11,11 +12,12 @@ unique_ptr<BaseStatistics> ClickhouseTableEntry::GetStatistics(ClientContext &co
 }
 
 TableFunction ClickhouseTableEntry::GetScanFunction(ClientContext &context, unique_ptr<FunctionData> &bind_data) {
-	throw NotImplementedException("GetScanFunction");
+	return ClickhouseScanFunction();
 }
 
 TableStorageInfo ClickhouseTableEntry::GetStorageInfo(ClientContext &context) {
-	throw NotImplementedException("GetStorageInfo");
+	return TableStorageInfo();
+	// throw NotImplementedException("GetStorageInfo");
 }
 
 void ClickhouseTableEntry::BindUpdateConstraints(Binder &binder, LogicalGet &get, LogicalProjection &proj,
